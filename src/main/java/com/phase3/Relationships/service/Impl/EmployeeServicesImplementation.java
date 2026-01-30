@@ -1,0 +1,131 @@
+package com.phase3.Relationships.service.Impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.phase3.Relationships.dto.request.EmployeeCreateRequestDto;
+import com.phase3.Relationships.dto.request.EmployeeUpdateRequestDto;
+import com.phase3.Relationships.dto.response.DepartmentResponseDto;
+import com.phase3.Relationships.dto.response.EmployeeResponseDto;
+import com.phase3.Relationships.entity.DepartmentEntity;
+import com.phase3.Relationships.entity.EmployeeEntity;
+import com.phase3.Relationships.mapper.DepartmentMapper;
+import com.phase3.Relationships.mapper.EmployeeMapper;
+import com.phase3.Relationships.repository.DepartmentRepo;
+import com.phase3.Relationships.repository.EmployeeRepo;
+import com.phase3.Relationships.service.EmployeeService;
+
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
+
+@Service
+public class EmployeeServicesImplementation implements EmployeeService {
+  
+  private final EmployeeRepo employeeRepo;
+  private final DepartmentRepo departmentRepo;
+  private final DepartmentMapper departmentMapper;
+  private final EmployeeMapper employeeMapper;
+
+  public EmployeeServicesImplementation(EmployeeRepo employeeRepo, DepartmentRepo departmentRepo,DepartmentMapper departmentMapper,EmployeeMapper employeeMapper){
+    this.employeeRepo = employeeRepo;
+    this.departmentRepo = departmentRepo;
+    this.employeeMapper = employeeMapper;
+    this.departmentMapper = departmentMapper;
+  }
+
+
+  @Override
+  public List<EmployeeResponseDto> getAllEmployees(){
+    List<EmployeeEntity> entitiesList = employeeRepo.findAll();
+    List<EmployeeResponseDto> dtoList = entitiesList.stream().map(employeeMapper::toResponseDto).toList();
+    return dtoList;
+  }
+  
+
+
+  @Override
+  public EmployeeResponseDto getEmployeeById(Long id){
+    EmployeeEntity entity = employeeRepo.findById(id)
+    .orElseThrow(() -> new EntityNotFoundException(
+      "Employee not found with id: " + id
+    ));
+    return employeeMapper.toResponseDto(entity);
+  }
+  
+
+
+  @Override
+  @Transactional
+  public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto dto){
+
+    if(dto.getDepartmentId() == null){
+      throw new IllegalArgumentException("Department is required!");
+    }
+
+    DepartmentEntity department = departmentRepo.findById(dto.getDepartmentId()).orElseThrow(
+      ()-> new EntityNotFoundException("Department not found")
+    );
+
+    EmployeeEntity employee = employeeMapper.fromCreateRequest(dto);
+    employee.setDepartment(department);
+    
+    EmployeeEntity saved = employeeRepo.save(employee);
+    return employeeMapper.toResponseDto(saved);
+  
+  }
+  
+
+
+  @Override
+  @Transactional
+  public EmployeeResponseDto updateEmployee(Long id, EmployeeUpdateRequestDto dto){
+
+    EmployeeEntity existing = employeeRepo.findById(id).orElseThrow(()-> new EntityNotFoundException("Employee not found with id: " + id) );
+    employeeMapper.updateEntityFromRequest(dto, existing);
+    return employeeMapper.toResponseDto(existing);
+    
+  }
+  
+
+
+  @Override
+  public boolean deleteEmployee(Long id){
+    if(!employeeRepo.existsById(id)) return false;
+    employeeRepo.deleteById(id);
+    return true;
+  }
+  
+
+
+  @Override
+  @Transactional
+  public EmployeeResponseDto assingEmployeeDepartment(Long empId, Long depId){
+    
+    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new EntityNotFoundException("Employee not found with id: " + empId));
+
+    DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new EntityNotFoundException("Department not found with id: " + depId));
+
+    emp.setDepartment(dep);
+
+    return employeeMapper.toResponseDto(emp);
+
+  }
+  
+
+
+  @Override
+  @Transactional(readOnly = true)
+  public DepartmentResponseDto getEmployeeDepartment(Long empId){
+        
+    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new EntityNotFoundException("Employee not found with id: " + empId));
+
+    DepartmentEntity dep = emp.getDepartment();
+
+    return departmentMapper.toResponseDto(dep);
+
+  }
+
+  
+}
