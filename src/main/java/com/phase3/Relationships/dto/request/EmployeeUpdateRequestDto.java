@@ -4,6 +4,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Email;
 
 @Data
 public class EmployeeUpdateRequestDto {
@@ -12,6 +13,7 @@ public class EmployeeUpdateRequestDto {
 
   private String name;
   
+  @Email
   private String email;
   
   private BigDecimal salary;

@@ -16,8 +16,8 @@ import com.phase3.Relationships.repository.DepartmentRepo;
 import com.phase3.Relationships.repository.EmployeeRepo;
 import com.phase3.Relationships.service.EmployeeService;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import com.phase3.Relationships.exception.ResourceNotFoundException;
 
 
 @Service
@@ -48,7 +48,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
   @Override
   public EmployeeResponseDto getEmployeeById(Long id){
     EmployeeEntity entity = employeeRepo.findById(id)
-    .orElseThrow(() -> new EntityNotFoundException(
+    .orElseThrow(() -> new ResourceNotFoundException(
       "Employee not found with id: " + id
     ));
     return employeeMapper.toResponseDto(entity);
@@ -65,7 +65,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
     }
 
     DepartmentEntity department = departmentRepo.findById(dto.getDepartmentId()).orElseThrow(
-      ()-> new EntityNotFoundException("Department not found")
+      ()-> new ResourceNotFoundException("Department not found")
     );
 
     EmployeeEntity employee = employeeMapper.fromCreateRequest(dto);
@@ -82,7 +82,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
   @Transactional
   public EmployeeResponseDto updateEmployee(Long id, EmployeeUpdateRequestDto dto){
 
-    EmployeeEntity existing = employeeRepo.findById(id).orElseThrow(()-> new EntityNotFoundException("Employee not found with id: " + id) );
+    EmployeeEntity existing = employeeRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id) );
     employeeMapper.updateEntityFromRequest(dto, existing);
     return employeeMapper.toResponseDto(existing);
     
@@ -103,9 +103,9 @@ public class EmployeeServicesImplementation implements EmployeeService {
   @Transactional
   public EmployeeResponseDto assingEmployeeDepartment(Long empId, Long depId){
     
-    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new EntityNotFoundException("Employee not found with id: " + empId));
+    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new ResourceNotFoundException("Employee not found with id: " + empId));
 
-    DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new EntityNotFoundException("Department not found with id: " + depId));
+    DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new ResourceNotFoundException("Department not found with id: " + depId));
 
     emp.setDepartment(dep);
 
@@ -119,7 +119,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
   @Transactional(readOnly = true)
   public DepartmentResponseDto getEmployeeDepartment(Long empId){
         
-    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new EntityNotFoundException("Employee not found with id: " + empId));
+    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new ResourceNotFoundException("Employee not found with id: " + empId));
 
     DepartmentEntity dep = emp.getDepartment();
 

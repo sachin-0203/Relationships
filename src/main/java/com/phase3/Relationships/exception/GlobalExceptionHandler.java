@@ -1,0 +1,48 @@
+package com.phase3.Relationships.exception;
+
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.phase3.Relationships.dto.ExceptionDto;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+  
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ExceptionDto> ResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest req){
+
+    ExceptionDto error = new ExceptionDto(
+      LocalDateTime.now(),
+      HttpStatus.NOT_FOUND.value(),
+      HttpStatus.NOT_FOUND.name(),
+      ex.getMessage(),
+      req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ExceptionDto> handleValidException(MethodArgumentNotValidException ex, HttpServletRequest req){
+
+    String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+
+    ExceptionDto validateError = new ExceptionDto(
+      LocalDateTime.now(),
+      HttpStatus.NOT_FOUND.value(),
+      HttpStatus.NOT_FOUND.name(),
+      message,
+      req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(validateError,HttpStatus.BAD_REQUEST);
+  }
+
+}

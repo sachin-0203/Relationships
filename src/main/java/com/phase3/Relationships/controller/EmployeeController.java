@@ -8,6 +8,7 @@ import com.phase3.Relationships.dto.request.EmployeeUpdateRequestDto;
 import com.phase3.Relationships.dto.response.DepartmentResponseDto;
 import com.phase3.Relationships.dto.response.EmployeeResponseDto;
 import com.phase3.Relationships.service.Impl.EmployeeServicesImplementation;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class EmployeeController {
   }
 
   @PostMapping
-  public ResponseEntity<EmployeeResponseDto> createEmployee(@RequestBody EmployeeCreateRequestDto dto){
+  public ResponseEntity<EmployeeResponseDto> createEmployee(@Valid @RequestBody EmployeeCreateRequestDto dto){
     return ResponseEntity.ok(employeeServices.createEmployee(dto));
   }
   
@@ -48,7 +49,7 @@ public class EmployeeController {
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable Long id, @RequestBody EmployeeUpdateRequestDto dto) {
+  public ResponseEntity<EmployeeResponseDto> updateEmployee(@Valid @PathVariable Long id, @RequestBody EmployeeUpdateRequestDto dto) {
       return ResponseEntity.ok(employeeServices.updateEmployee(id, dto));
   }
 
