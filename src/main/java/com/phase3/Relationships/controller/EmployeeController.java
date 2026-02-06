@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 
 @RestController
@@ -66,6 +69,11 @@ public class EmployeeController {
   @PutMapping("/{empId}/department/{depId}")
   public ResponseEntity<EmployeeResponseDto> assingEmployeeDepartment(@PathVariable Long empId , @PathVariable Long depId){
     return ResponseEntity.ok(employeeServices.assingEmployeeDepartment(empId, depId));
+  }
+
+  @GetMapping("/getEmployees")
+  public ResponseEntity<Page<EmployeeResponseDto>>getEmployees(Pageable pageable){
+    return ResponseEntity.ok(employeeServices.getEmployees(pageable));
   }
 
 }

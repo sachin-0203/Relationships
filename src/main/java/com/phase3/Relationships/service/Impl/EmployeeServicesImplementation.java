@@ -19,6 +19,10 @@ import com.phase3.Relationships.service.EmployeeService;
 import org.springframework.transaction.annotation.Transactional;
 import com.phase3.Relationships.exception.ResourceNotFoundException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+
 
 @Service
 public class EmployeeServicesImplementation implements EmployeeService {
@@ -127,5 +131,10 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
   }
 
-  
+  @Transactional(readOnly = true)
+  public Page<EmployeeResponseDto> getEmployees(Pageable pageable){
+    Page<EmployeeEntity> pageEntities = employeeRepo.findAll(pageable);
+    Page<EmployeeResponseDto> pagedResponse = pageEntities.map(employeeMapper::toResponseDto);
+    return pagedResponse;
+  }
 }
