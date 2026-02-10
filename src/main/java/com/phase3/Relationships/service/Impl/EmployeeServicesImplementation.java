@@ -10,7 +10,7 @@ import com.phase3.Relationships.dto.response.DepartmentResponseDto;
 import com.phase3.Relationships.dto.response.EmployeeResponseDto;
 import com.phase3.Relationships.entity.DepartmentEntity;
 import com.phase3.Relationships.entity.EmployeeEntity;
-import com.phase3.Relationships.mapper.DepartmentMapper;
+// import com.phase3.Relationships.mapper.DepartmentMapper;
 import com.phase3.Relationships.mapper.EmployeeMapper;
 import com.phase3.Relationships.repository.DepartmentRepo;
 import com.phase3.Relationships.repository.EmployeeRepo;
@@ -31,11 +31,10 @@ public class EmployeeServicesImplementation implements EmployeeService {
   private final DepartmentRepo departmentRepo;
   private final EmployeeMapper employeeMapper;
 
-  public EmployeeServicesImplementation(EmployeeRepo employeeRepo, DepartmentRepo departmentRepo,DepartmentMapper departmentMapper,EmployeeMapper employeeMapper){
+  public EmployeeServicesImplementation(EmployeeRepo employeeRepo, DepartmentRepo departmentRepo,EmployeeMapper employeeMapper){
     this.employeeRepo = employeeRepo;
     this.departmentRepo = departmentRepo;
     this.employeeMapper = employeeMapper;
-    this.departmentMapper = departmentMapper;
   }
 
 
