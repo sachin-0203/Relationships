@@ -32,6 +32,7 @@ public class DepartmentServiceImplementation implements DepartmentService  {
   }
 
   @Override
+  @Transactional
   public DepartmentResponseDto createDepartment(DepartmentCreateRequestDto dto){
 
     DepartmentEntity newDep = departmentMapper.fromCreateRequest(dto);
@@ -65,7 +66,7 @@ public class DepartmentServiceImplementation implements DepartmentService  {
   @Transactional(readOnly = true)
   public List<EmployeeResponseDto> getDepartmentEmployee(Long depId){
 
-    DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new ResourceNotFoundException("Department not found with id" + depId));
+    DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new ResourceNotFoundException("Department not found with id: " + depId));
 
     List<EmployeeEntity> allEmployeesEntity = dep.getEmployeesList();
     List<EmployeeResponseDto> allEmployeesResponseList = allEmployeesEntity.stream().map(employeeMapper::toResponseDto).toList();
@@ -74,12 +75,13 @@ public class DepartmentServiceImplementation implements DepartmentService  {
 
   }
 
+  @Transactional(readOnly = true)
   public List<DepartmentResponseDto> getAllDepartments(){
-    return departmentRepo.findAll().stream().map(departmentMapper::toResponseDto).toList();
+    return departmentRepo.findAllDepartmentProjected();
   }
 
+  @Transactional(readOnly = true)
   public DepartmentResponseDto getDepartmentById(Long id){
-    DepartmentEntity existingDepartmentEntity = departmentRepo.findById(id).orElseThrow( ()-> new ResourceNotFoundException("Department not found with id: " + id));
-    return departmentMapper.toResponseDto(existingDepartmentEntity);
+    return departmentRepo.findDepartmentByIdProjected(id).orElseThrow( ()-> new ResourceNotFoundException("Department not found with id: " + id));
   }
 }

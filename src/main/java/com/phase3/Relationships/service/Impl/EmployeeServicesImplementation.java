@@ -42,20 +42,17 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
   @Override
   public List<EmployeeResponseDto> getAllEmployees(){
-    List<EmployeeEntity> entitiesList = employeeRepo.findAll();
-    List<EmployeeResponseDto> dtoList = entitiesList.stream().map(employeeMapper::toResponseDto).toList();
-    return dtoList;
+    return employeeRepo.findAllEmployeesProjected();
   }
   
 
 
   @Override
   public EmployeeResponseDto getEmployeeById(Long id){
-    EmployeeEntity entity = employeeRepo.findById(id)
+    return employeeRepo.findEmployeeByIdProjected(id)
     .orElseThrow(() -> new ResourceNotFoundException(
       "Employee not found with id: " + id
     ));
-    return employeeMapper.toResponseDto(entity);
   }
   
 
@@ -122,13 +119,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
   @Override
   @Transactional(readOnly = true)
   public DepartmentResponseDto getEmployeeDepartment(Long empId){
-        
-    EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new ResourceNotFoundException("Employee not found with id: " + empId));
-
-    DepartmentEntity dep = emp.getDepartment();
-
-    return departmentMapper.toResponseDto(dep);
-
+    return employeeRepo.findDepartmentByEmployeeIdProjected(empId).orElseThrow( ()-> new ResourceNotFoundException("Employee not found with id: " + empId));
   }
 
   @Transactional(readOnly = true)

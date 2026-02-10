@@ -1,6 +1,8 @@
 package com.phase3.Relationships.dto.response;
 
 import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,9 +10,11 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeResponseDto {
 
-  private Long Id;
+  private Long id;
 
   private String name;
   
