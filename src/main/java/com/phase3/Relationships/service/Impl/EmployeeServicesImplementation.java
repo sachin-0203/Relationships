@@ -29,7 +29,6 @@ public class EmployeeServicesImplementation implements EmployeeService {
   
   private final EmployeeRepo employeeRepo;
   private final DepartmentRepo departmentRepo;
-  private final DepartmentMapper departmentMapper;
   private final EmployeeMapper employeeMapper;
 
   public EmployeeServicesImplementation(EmployeeRepo employeeRepo, DepartmentRepo departmentRepo,DepartmentMapper departmentMapper,EmployeeMapper employeeMapper){
