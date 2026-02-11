@@ -36,13 +36,52 @@ public class GlobalExceptionHandler {
 
     ExceptionDto validateError = new ExceptionDto(
       LocalDateTime.now(),
-      HttpStatus.NOT_FOUND.value(),
-      HttpStatus.NOT_FOUND.name(),
+      HttpStatus.BAD_REQUEST.value(),
+      HttpStatus.BAD_REQUEST.name(),
       message,
       req.getRequestURI()
     );
 
     return new ResponseEntity<>(validateError,HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(DepartmentFullException.class)
+  public ResponseEntity<ExceptionDto> handlerDepartmentFullException(DepartmentFullException ex, HttpServletRequest req){
+    ExceptionDto storageError = new ExceptionDto(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            HttpStatus.CONFLICT.name(),
+            ex.getMessage(),
+            req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(storageError,HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(DepartmentDeleteException.class)
+  public ResponseEntity<ExceptionDto> handlerDepartmentDeleteException(DepartmentDeleteException ex, HttpServletRequest req){
+    ExceptionDto storageError = new ExceptionDto(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            HttpStatus.CONFLICT.name(),
+            ex.getMessage(),
+            req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(storageError,HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(DepartmentAlreadyExistedException.class)
+  public ResponseEntity<ExceptionDto> handleDepartmentExistedException(DepartmentAlreadyExistedException ex, HttpServletRequest req){
+    ExceptionDto existedError = new ExceptionDto(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            HttpStatus.CONFLICT.name(),
+            ex.getMessage(),
+            req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(existedError,HttpStatus.CONFLICT);
   }
 
 }

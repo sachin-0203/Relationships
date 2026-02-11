@@ -48,10 +48,13 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity,Long>  {
       d.id,
       d.name,
       d.code,
-      d.description
+      d.description,
+      d.maxCapacity
     )
     FROM EmployeeEntity e JOIN e.department d WHERE e.id = :empId    
   """)
   Optional<DepartmentResponseDto> findDepartmentByEmployeeIdProjected(@Param("empId") Long id);
+
+  long countByDepartmentId(Long depId);
 
 }

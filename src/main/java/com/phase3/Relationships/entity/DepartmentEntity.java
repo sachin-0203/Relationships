@@ -26,6 +26,7 @@ public class DepartmentEntity {
   private String name;
   private String code;
   private String description;
+  private Integer maxCapacity;
 
   @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
   private List<EmployeeEntity> employeesList = new ArrayList<>();

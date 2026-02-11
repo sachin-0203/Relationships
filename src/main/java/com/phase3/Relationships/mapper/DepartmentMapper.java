@@ -17,6 +17,7 @@ public class DepartmentMapper {
     newEntity.setName(dto.getName());
     newEntity.setCode(dto.getCode());
     newEntity.setDescription(dto.getDescription());
+    newEntity.setMaxCapacity(dto.getMaxCapacity());
     return newEntity;
   }
 
@@ -31,6 +32,9 @@ public class DepartmentMapper {
     if(dto.getDescription() != null){
       entity.setDescription(dto.getDescription());
     }
+    if(dto.getMaxCapacity() != null){
+      entity.setMaxCapacity(dto.getMaxCapacity());
+    }
 
   }
 
@@ -41,6 +45,7 @@ public class DepartmentMapper {
     response.setName(entity.getName());
     response.setCode(entity.getCode());
     response.setDescription(entity.getDescription());
+    response.setMaxCapacity(entity.getMaxCapacity());
     return response;
   
   }

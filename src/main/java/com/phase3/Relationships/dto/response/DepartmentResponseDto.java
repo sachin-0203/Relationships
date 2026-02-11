@@ -14,5 +14,6 @@ public class DepartmentResponseDto {
   private String name;
   private String code;
   private String description;
+  private Integer maxCapacity;
   
 }

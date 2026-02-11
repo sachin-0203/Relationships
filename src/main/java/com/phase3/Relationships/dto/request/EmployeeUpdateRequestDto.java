@@ -1,5 +1,6 @@
 package com.phase3.Relationships.dto.request;
 
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,8 +20,7 @@ public class EmployeeUpdateRequestDto {
   private BigDecimal salary;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+  @PastOrPresent(message = "please provide the past or present date")
   private LocalDate joiningDate;
-
-  private Long departmentId;
 
 }

@@ -2,6 +2,9 @@ package com.phase3.Relationships.service.Impl;
 
 import java.util.List;
 
+import com.phase3.Relationships.exception.DepartmentAlreadyExistedException;
+import com.phase3.Relationships.exception.DepartmentDeleteException;
+import com.phase3.Relationships.repository.EmployeeRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,39 +24,45 @@ public class DepartmentServiceImplementation implements DepartmentService  {
   
   private final DepartmentRepo departmentRepo;
   private final DepartmentMapper departmentMapper;
+  private final EmployeeRepo employeeRepo;
 
-  public DepartmentServiceImplementation(DepartmentRepo departmentRepo, DepartmentMapper departmentMapper){
+  public DepartmentServiceImplementation(DepartmentRepo departmentRepo, DepartmentMapper departmentMapper, EmployeeRepo employeeRepo){
     this.departmentRepo = departmentRepo;
     this.departmentMapper = departmentMapper;
+    this.employeeRepo = employeeRepo;
   }
 
   @Override
   @Transactional
   public DepartmentResponseDto createDepartment(DepartmentCreateRequestDto dto){
 
+    if(departmentRepo.existsByCode(dto.getCode())){
+      throw new DepartmentAlreadyExistedException("This Department id already existed!");
+    }
     DepartmentEntity newDep = departmentMapper.fromCreateRequest(dto);
     DepartmentEntity saved  = departmentRepo.save(newDep);
-    DepartmentResponseDto response = departmentMapper.toResponseDto(saved);
-    return response;
+    return departmentMapper.toResponseDto(saved);
   }
 
   @Override
   @Transactional
   public DepartmentResponseDto updateDepartment(Long id, DepartmentUpdateRequestDto dto){
     
-    DepartmentEntity exitsting = departmentRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Department is not found with id: " + id));
+    DepartmentEntity existing = departmentRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Department is not found with id: " + id));
 
-    departmentMapper.updateEntityfromRequest(dto, exitsting);
-    return departmentMapper.toResponseDto(exitsting);
+    departmentMapper.updateEntityfromRequest(dto, existing);
+    return departmentMapper.toResponseDto(existing);
   }
 
   @Override
+  @Transactional
   public boolean deleteDepartment(Long id){
 
-    if(!departmentRepo.existsById(id)){
-      return false;
+    DepartmentEntity existingDep = departmentRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Department not exist with id : " + id));
+    long employeeCount = employeeRepo.countByDepartmentId(id);
+    if(employeeCount > 0){
+      throw new DepartmentDeleteException("Cannot delete department with existing employees");
     }
-
     departmentRepo.deleteById(id);
     return true;
   }

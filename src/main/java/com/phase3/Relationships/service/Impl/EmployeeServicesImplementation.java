@@ -2,6 +2,7 @@ package com.phase3.Relationships.service.Impl;
 
 import java.util.List;
 
+import com.phase3.Relationships.exception.DepartmentFullException;
 import org.springframework.stereotype.Service;
 
 import com.phase3.Relationships.dto.request.EmployeeCreateRequestDto;
@@ -10,7 +11,6 @@ import com.phase3.Relationships.dto.response.DepartmentResponseDto;
 import com.phase3.Relationships.dto.response.EmployeeResponseDto;
 import com.phase3.Relationships.entity.DepartmentEntity;
 import com.phase3.Relationships.entity.EmployeeEntity;
-// import com.phase3.Relationships.mapper.DepartmentMapper;
 import com.phase3.Relationships.mapper.EmployeeMapper;
 import com.phase3.Relationships.repository.DepartmentRepo;
 import com.phase3.Relationships.repository.EmployeeRepo;
@@ -57,7 +57,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
   @Override
   @Transactional
-  public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto dto){
+  public EmployeeResponseDto hireEmployee(EmployeeCreateRequestDto dto){
 
     if(dto.getDepartmentId() == null){
       throw new IllegalArgumentException("Department is required!");
@@ -66,6 +66,11 @@ public class EmployeeServicesImplementation implements EmployeeService {
     DepartmentEntity department = departmentRepo.findById(dto.getDepartmentId()).orElseThrow(
       ()-> new ResourceNotFoundException("Department not found")
     );
+
+    long currentSize = employeeRepo.countByDepartmentId(department.getId());
+    if(currentSize >= department.getMaxCapacity()){
+      throw new DepartmentFullException("Department is full!");
+    }
 
     EmployeeEntity employee = employeeMapper.fromCreateRequest(dto);
     employee.setDepartment(department);
@@ -90,7 +95,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
 
   @Override
-  public boolean deleteEmployee(Long id){
+  public boolean terminateEmployee(Long id){
     if(!employeeRepo.existsById(id)) return false;
     employeeRepo.deleteById(id);
     return true;
@@ -100,12 +105,15 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
   @Override
   @Transactional
-  public EmployeeResponseDto assingEmployeeDepartment(Long empId, Long depId){
+  public EmployeeResponseDto transferEmployee(Long empId, Long depId){
     
     EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new ResourceNotFoundException("Employee not found with id: " + empId));
 
     DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new ResourceNotFoundException("Department not found with id: " + depId));
 
+    if(employeeRepo.countByDepartmentId(depId) >= dep.getMaxCapacity()){
+      throw new DepartmentFullException("department is full! so cannot transfer employee to department with id: " + depId);
+    }
     emp.setDepartment(dep);
 
     return employeeMapper.toResponseDto(emp);
@@ -123,7 +131,6 @@ public class EmployeeServicesImplementation implements EmployeeService {
   @Transactional(readOnly = true)
   public Page<EmployeeResponseDto> getEmployees(Pageable pageable){
     Page<EmployeeEntity> pageEntities = employeeRepo.findAll(pageable);
-    Page<EmployeeResponseDto> pagedResponse = pageEntities.map(employeeMapper::toResponseDto);
-    return pagedResponse;
+    return pageEntities.map(employeeMapper::toResponseDto);
   }
 }

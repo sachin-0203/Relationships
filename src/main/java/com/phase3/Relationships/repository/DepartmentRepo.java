@@ -7,21 +7,25 @@ import org.springframework.data.repository.query.Param;
 import com.phase3.Relationships.dto.response.DepartmentResponseDto;
 import com.phase3.Relationships.dto.response.EmployeeResponseDto;
 import com.phase3.Relationships.entity.DepartmentEntity;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 
 
-
+@Repository
 public interface DepartmentRepo extends JpaRepository<DepartmentEntity,Long> {
+
+  public Boolean existsByCode(String code);
 
   @Query("""
     SELECT new com.phase3.Relationships.dto.response.DepartmentResponseDto(
       d.id,
       d.name,
       d.code,
-      d.description
-    ) FROM DepartmentEntity d   
-  """)
+      d.description,
+      d.maxCapacity
+    ) FROM DepartmentEntity d""")
   List<DepartmentResponseDto> findAllDepartmentProjected();
 
   @Query("""
@@ -29,9 +33,9 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity,Long> {
       d.id,
       d.name,
       d.code,
-      d.description
-    ) FROM DepartmentEntity d WHERE d.id = :id 
-  """)
+      d.description,
+      d.maxCapacity
+    ) FROM DepartmentEntity d WHERE d.id = :id""")
   Optional<DepartmentResponseDto> findDepartmentByIdProjected(@Param("id") Long id);
 
   @Query("""
@@ -42,8 +46,6 @@ public interface DepartmentRepo extends JpaRepository<DepartmentEntity,Long> {
       e.salary,
       e.joiningDate,
       e.department.id
-    ) FROM EmployeeEntity e WHERE e.department.id = :depId   
-  """)
-  List<EmployeeResponseDto>getDepartmentEmployeesProjected(@Param("depId") Long id);
-
-}
+    ) FROM EmployeeEntity e WHERE e.department.id = :depId""")
+  List<EmployeeResponseDto> getDepartmentEmployeesProjected(@Param("depId") Long id);
+  }

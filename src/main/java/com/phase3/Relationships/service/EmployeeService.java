@@ -11,11 +11,11 @@ public interface EmployeeService {
 
   public List<EmployeeResponseDto> getAllEmployees();
   public EmployeeResponseDto getEmployeeById(Long id);
-  public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto dto);
+  public EmployeeResponseDto hireEmployee(EmployeeCreateRequestDto dto);
   public EmployeeResponseDto updateEmployee(Long id, EmployeeUpdateRequestDto dto);
-  public boolean deleteEmployee(Long id);
+  public boolean terminateEmployee(Long id);
 
-  public EmployeeResponseDto assingEmployeeDepartment(Long empId, Long depId);
+  public EmployeeResponseDto transferEmployee(Long empId, Long depId);
   public DepartmentResponseDto getEmployeeDepartment(Long empId);
 
 }
