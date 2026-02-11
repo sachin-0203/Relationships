@@ -10,7 +10,6 @@ import com.phase3.Relationships.dto.response.DepartmentResponseDto;
 import com.phase3.Relationships.dto.response.EmployeeResponseDto;
 import com.phase3.Relationships.entity.DepartmentEntity;
 import com.phase3.Relationships.entity.EmployeeEntity;
-// import com.phase3.Relationships.mapper.DepartmentMapper;
 import com.phase3.Relationships.mapper.EmployeeMapper;
 import com.phase3.Relationships.repository.DepartmentRepo;
 import com.phase3.Relationships.repository.EmployeeRepo;
@@ -57,7 +56,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
   @Override
   @Transactional
-  public EmployeeResponseDto createEmployee(EmployeeCreateRequestDto dto){
+  public EmployeeResponseDto hireEmployee(EmployeeCreateRequestDto dto){
 
     if(dto.getDepartmentId() == null){
       throw new IllegalArgumentException("Department is required!");
@@ -100,7 +99,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
 
   @Override
   @Transactional
-  public EmployeeResponseDto assingEmployeeDepartment(Long empId, Long depId){
+  public EmployeeResponseDto transferEmployee(Long empId, Long depId){
     
     EmployeeEntity emp = employeeRepo.findById(empId).orElseThrow( ()-> new ResourceNotFoundException("Employee not found with id: " + empId));
 

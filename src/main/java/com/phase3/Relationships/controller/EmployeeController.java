@@ -43,7 +43,7 @@ public class EmployeeController {
 
   @PostMapping
   public ResponseEntity<EmployeeResponseDto> createEmployee(@Valid @RequestBody EmployeeCreateRequestDto dto){
-    return ResponseEntity.ok(employeeServices.createEmployee(dto));
+    return ResponseEntity.ok(employeeServices.hireEmployee(dto));
   }
   
   @GetMapping("/{id}")
@@ -68,7 +68,7 @@ public class EmployeeController {
 
   @PutMapping("/{empId}/department/{depId}")
   public ResponseEntity<EmployeeResponseDto> assingEmployeeDepartment(@PathVariable Long empId , @PathVariable Long depId){
-    return ResponseEntity.ok(employeeServices.assingEmployeeDepartment(empId, depId));
+    return ResponseEntity.ok(employeeServices.transferEmployee(empId, depId));
   }
 
   @GetMapping("/getEmployees")
