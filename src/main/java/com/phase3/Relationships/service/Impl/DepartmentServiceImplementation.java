@@ -23,12 +23,10 @@ public class DepartmentServiceImplementation implements DepartmentService  {
   
   private final DepartmentRepo departmentRepo;
   private final DepartmentMapper departmentMapper;
-  private final EmployeeMapper employeeMapper;
 
-  public DepartmentServiceImplementation(DepartmentRepo departmentRepo, DepartmentMapper departmentMapper, EmployeeMapper employeeMapper){
+  public DepartmentServiceImplementation(DepartmentRepo departmentRepo, DepartmentMapper departmentMapper){
     this.departmentRepo = departmentRepo;
     this.departmentMapper = departmentMapper;
-    this.employeeMapper = employeeMapper;
   }
 
   @Override
@@ -65,14 +63,7 @@ public class DepartmentServiceImplementation implements DepartmentService  {
   @Override
   @Transactional(readOnly = true)
   public List<EmployeeResponseDto> getDepartmentEmployee(Long depId){
-
-    DepartmentEntity dep = departmentRepo.findById(depId).orElseThrow(()-> new ResourceNotFoundException("Department not found with id: " + depId));
-
-    List<EmployeeEntity> allEmployeesEntity = dep.getEmployeesList();
-    List<EmployeeResponseDto> allEmployeesResponseList = allEmployeesEntity.stream().map(employeeMapper::toResponseDto).toList();
-
-    return allEmployeesResponseList;
-
+    return departmentRepo.getDepartmentEmployeesProjected(depId);
   }
 
   @Transactional(readOnly = true)
