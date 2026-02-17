@@ -1,4 +1,4 @@
-package com.phase3.Relationships.dto;
+package com.phase3.Relationships.dto.exception;
 
 import java.time.LocalDateTime;
 

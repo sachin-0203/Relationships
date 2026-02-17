@@ -20,7 +20,7 @@ public class EmployeeUpdateRequestDto {
   private BigDecimal salary;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-  @PastOrPresent(message = "please provide the past or present date")
+  @PastOrPresent(message = "joining date cannot be a future date")
   private LocalDate joiningDate;
 
 }

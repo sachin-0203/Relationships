@@ -37,7 +37,7 @@ public class DepartmentServiceImplementation implements DepartmentService  {
   public DepartmentResponseDto createDepartment(DepartmentCreateRequestDto dto){
 
     if(departmentRepo.existsByCode(dto.getCode())){
-      throw new DepartmentAlreadyExistedException("This Department id already existed!");
+      throw new DepartmentAlreadyExistedException("This Department id already existed! with code : " + dto.getCode());
     }
     DepartmentEntity newDep = departmentMapper.fromCreateRequest(dto);
     DepartmentEntity saved  = departmentRepo.save(newDep);
@@ -63,7 +63,7 @@ public class DepartmentServiceImplementation implements DepartmentService  {
     if(employeeCount > 0){
       throw new DepartmentDeleteException("Cannot delete department with existing employees");
     }
-    departmentRepo.deleteById(id);
+    departmentRepo.deleteById(existingDep.getId());
     return true;
   }
 

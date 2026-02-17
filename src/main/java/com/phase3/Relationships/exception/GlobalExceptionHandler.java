@@ -2,6 +2,7 @@ package com.phase3.Relationships.exception;
 
 import java.time.LocalDateTime;
 
+import com.phase3.Relationships.dto.exception.ExceptionDto;
 import com.phase3.Relationships.exception.departmentException.DepartmentAlreadyExistedException;
 import com.phase3.Relationships.exception.departmentException.DepartmentDeleteException;
 import com.phase3.Relationships.exception.departmentException.DepartmentFullException;
@@ -11,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.phase3.Relationships.dto.ExceptionDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 

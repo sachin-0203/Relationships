@@ -42,9 +42,7 @@ public class EmployeeMapper {
     response.setEmail(entity.getEmail());
     response.setJoiningDate(entity.getJoiningDate());
     response.setSalary(entity.getSalary());
-    if(entity.getDepartment() != null){
-      response.setDepartmentId(entity.getDepartment().getId());
-    }
+    response.setDepartmentId(entity.getDepartment().getId());
     return response;
   }
 
