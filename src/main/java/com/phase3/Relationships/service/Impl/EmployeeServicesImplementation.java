@@ -1,8 +1,11 @@
 package com.phase3.Relationships.service.Impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import com.phase3.Relationships.exception.DepartmentFullException;
+import com.phase3.Relationships.exception.departmentException.DepartmentFullException;
+import com.phase3.Relationships.exception.ValueRequiredException;
+import com.phase3.Relationships.exception.employeeException.EmployeeAlreadyExistedException;
 import org.springframework.stereotype.Service;
 
 import com.phase3.Relationships.dto.request.EmployeeCreateRequestDto;
@@ -60,7 +63,7 @@ public class EmployeeServicesImplementation implements EmployeeService {
   public EmployeeResponseDto hireEmployee(EmployeeCreateRequestDto dto){
 
     if(dto.getDepartmentId() == null){
-      throw new IllegalArgumentException("Department is required!");
+      throw new ValueRequiredException("Department is required!");
     }
 
     DepartmentEntity department = departmentRepo.findById(dto.getDepartmentId()).orElseThrow(
@@ -70,6 +73,10 @@ public class EmployeeServicesImplementation implements EmployeeService {
     long currentSize = employeeRepo.countByDepartmentId(department.getId());
     if(currentSize >= department.getMaxCapacity()){
       throw new DepartmentFullException("Department is full!");
+    }
+
+    if(employeeRepo.existsByEmail(dto.getEmail())){
+      throw new EmployeeAlreadyExistedException("Employee is already existed with the email: " + dto.getEmail());
     }
 
     EmployeeEntity employee = employeeMapper.fromCreateRequest(dto);

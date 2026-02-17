@@ -2,6 +2,10 @@ package com.phase3.Relationships.exception;
 
 import java.time.LocalDateTime;
 
+import com.phase3.Relationships.exception.departmentException.DepartmentAlreadyExistedException;
+import com.phase3.Relationships.exception.departmentException.DepartmentDeleteException;
+import com.phase3.Relationships.exception.departmentException.DepartmentFullException;
+import com.phase3.Relationships.exception.employeeException.EmployeeAlreadyExistedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -73,6 +77,32 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(DepartmentAlreadyExistedException.class)
   public ResponseEntity<ExceptionDto> handleDepartmentExistedException(DepartmentAlreadyExistedException ex, HttpServletRequest req){
+    ExceptionDto existedError = new ExceptionDto(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            HttpStatus.CONFLICT.name(),
+            ex.getMessage(),
+            req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(existedError,HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(ValueRequiredException.class)
+  public ResponseEntity<ExceptionDto> handleValueRequiredException(ValueRequiredException ex, HttpServletRequest req){
+    ExceptionDto existedError = new ExceptionDto(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.name(),
+            ex.getMessage(),
+            req.getRequestURI()
+    );
+
+    return new ResponseEntity<>(existedError,HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(EmployeeAlreadyExistedException.class)
+  public ResponseEntity<ExceptionDto> handleEmployeeExistedException(EmployeeAlreadyExistedException ex, HttpServletRequest req){
     ExceptionDto existedError = new ExceptionDto(
             LocalDateTime.now(),
             HttpStatus.CONFLICT.value(),

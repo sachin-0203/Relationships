@@ -2,8 +2,8 @@ package com.phase3.Relationships.service.Impl;
 
 import java.util.List;
 
-import com.phase3.Relationships.exception.DepartmentAlreadyExistedException;
-import com.phase3.Relationships.exception.DepartmentDeleteException;
+import com.phase3.Relationships.exception.departmentException.DepartmentAlreadyExistedException;
+import com.phase3.Relationships.exception.departmentException.DepartmentDeleteException;
 import com.phase3.Relationships.repository.EmployeeRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

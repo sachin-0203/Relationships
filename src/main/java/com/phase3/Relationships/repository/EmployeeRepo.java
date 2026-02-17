@@ -14,7 +14,8 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface EmployeeRepo extends JpaRepository<EmployeeEntity,Long>  {
-  
+
+  public boolean existsByEmail(String email);
 
   @Query("""
     SELECT new com.phase3.Relationships.dto.response.EmployeeResponseDto(
@@ -24,9 +25,7 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity,Long>  {
       e.salary,
       e.joiningDate,
       d.id
-    ) 
-    FROM EmployeeEntity e JOIN e.department d
-  """)
+    ) FROM EmployeeEntity e JOIN e.department d""")
   List<EmployeeResponseDto> findAllEmployeesProjected();
   
   @Query("""
@@ -38,9 +37,7 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity,Long>  {
       e.joiningDate,
       d.id
     )
-    FROM EmployeeEntity e JOIN e.department d 
-    WHERE e.id = :id
-  """)
+    FROM EmployeeEntity e JOIN e.department d WHERE e.id = :id""")
   Optional<EmployeeResponseDto> findEmployeeByIdProjected( @Param("id") Long id);
 
   @Query("""
@@ -51,8 +48,7 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity,Long>  {
       d.description,
       d.maxCapacity
     )
-    FROM EmployeeEntity e JOIN e.department d WHERE e.id = :empId    
-  """)
+    FROM EmployeeEntity e JOIN e.department d WHERE e.id = :empId""")
   Optional<DepartmentResponseDto> findDepartmentByEmployeeIdProjected(@Param("empId") Long id);
 
   long countByDepartmentId(Long depId);
